@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.senai.senaiFit.dtos.InstrutorDto;
 import com.senai.senaiFit.models.Instrutor;
-import com.senai.senaiFit.models.Usuario;
 import com.senai.senaiFit.repositories.InstrutorRepository;
-import com.senai.senaiFit.repositories.UsuarioRepository;
 
 @Controller
 public class InstrutorService {
@@ -19,38 +18,29 @@ public class InstrutorService {
 	@Autowired
 	private InstrutorRepository ir;
 	
-	@Autowired
-	private UsuarioRepository ur;
-	
 	public List<InstrutorDto> getAllInstrutor() {
-		List<Usuario> usuarios = ur.findAll();
+		List<Instrutor> instrutores = ir.findAll();
 		ArrayList<InstrutorDto> dtos = new ArrayList<>();
-		
-		for (Usuario usuario : usuarios) {
-			
-			if (ir.findById(usuario.getId()).get().getNumeroRegistroProfissional() != null) {
-				InstrutorDto dto = this.getInstrutor(usuario.getId());
-				dtos.add(dto);
-			}
+		for (Instrutor instrutor : instrutores) {
+			InstrutorDto instrutorDto = new InstrutorDto();
+			BeanUtils.copyProperties(instrutor, instrutorDto);
+			dtos.add(instrutorDto);
 		}
 		return dtos;
 	}
 	
-	public InstrutorDto getInstrutor(long id) {
-		Optional<Usuario> usuario = ur.findById(id);
-		Usuario newUsuario = usuario.get();
-		
+	public InstrutorDto getInstrutor(long id) {	
 		Optional<Instrutor> instrutor = ir.findById(id);
-		Instrutor newInstrutor = instrutor.get();
-
-		InstrutorDto dto = new InstrutorDto(newUsuario, newInstrutor);
+		InstrutorDto dto = new InstrutorDto();
+		BeanUtils.copyProperties(instrutor.get(), dto);
 		return dto;
 	}
 	
 	public InstrutorDto saveInstrutor (InstrutorDto dto) {
-		Instrutor instrutor = new Instrutor(dto);
-		Instrutor newInstrutor = ir.save(instrutor);
-		dto.setId(newInstrutor.getId());
+		Instrutor instrutor = new Instrutor();
+		BeanUtils.copyProperties(dto, instrutor);
+		instrutor = ir.save(instrutor);
+		BeanUtils.copyProperties(instrutor, dto);
 		return dto;
 	}
 	
@@ -59,11 +49,12 @@ public class InstrutorService {
 	}
 
 	public InstrutorDto updateInstrutor(long id, InstrutorDto dto) {
-		Instrutor instrutor = new Instrutor(dto);
-		instrutor.setId(id);
+		Optional<Instrutor> opt = ir.findById(id);
+		Instrutor instrutor = opt.get();
+		BeanUtils.copyProperties(dto, instrutor);
 		ir.save(instrutor);
-		
-		return this.getInstrutor(id);
+		BeanUtils.copyProperties(instrutor, dto);
+		return dto;
 	}
 
 }

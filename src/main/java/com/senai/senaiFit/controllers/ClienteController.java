@@ -2,8 +2,6 @@ package com.senai.senaiFit.controllers;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +36,7 @@ public class ClienteController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ClienteDto saveCliente (@RequestBody @Valid ClienteDto cliente) {
+	public ClienteDto saveCliente (@RequestBody ClienteDto cliente) {
 		return cs.saveCliente(cliente);
 	}
 	
@@ -53,7 +51,7 @@ public class ClienteController {
 	}
 	
 	@PutMapping("/{id}")
-	public ClienteDto updateCliente (@PathVariable long id, @Valid ClienteDto cliente) {
+	public ClienteDto updateCliente (@PathVariable long id, ClienteDto cliente) {
 		return cs.updateCliente(id, cliente);
 	}
 

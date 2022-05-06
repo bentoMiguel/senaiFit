@@ -14,9 +14,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
-import com.senai.senaiFit.dtos.ClienteDto;
-import com.senai.senaiFit.dtos.InstrutorDto;
-
 import lombok.Data;
 
 @Data
@@ -42,28 +39,5 @@ public class Usuario implements Serializable {
 	private TipoSexoEnum sexo;
 	private double peso;
 	private double altura;
-	
-	public Usuario(ClienteDto dto) {
-		this.cpf = dto.getCpf();
-		this.dataNascimento = dto.getDataNascimento();
-		this.nome = dto.getNome();
-		this.endereco = dto.getEndereco();
-		this.sexo = dto.getSexo();
-		this.peso = dto.getPeso();
-		this.altura = dto.getAltura();
-	}
-
-	public Usuario(InstrutorDto dto) {
-		this.cpf = dto.getCpf();
-		this.dataNascimento = dto.getDataNascimento();
-		this.nome = dto.getNome();
-		this.endereco = dto.getEndereco();
-		this.sexo = dto.getSexo();
-		this.peso = dto.getPeso();
-		this.altura = dto.getAltura();
-	}
-	
-	public Usuario() {
-	}
 	
 }

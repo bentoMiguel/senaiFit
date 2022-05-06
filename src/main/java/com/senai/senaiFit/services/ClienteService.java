@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.senai.senaiFit.dtos.ClienteDto;
 import com.senai.senaiFit.models.Cliente;
-import com.senai.senaiFit.models.Usuario;
 import com.senai.senaiFit.repositories.ClienteRepository;
-import com.senai.senaiFit.repositories.UsuarioRepository;
 
 @Controller
 public class ClienteService {
@@ -19,39 +18,31 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository cr;
 	
-	@Autowired
-	private UsuarioRepository ur;
 	
 	public List<ClienteDto> getAllCliente() {
-		List<Usuario> usuarios = ur.findAll();
-		ArrayList<ClienteDto> dtos = new ArrayList<>();
-		
-		for (Usuario usuario : usuarios) {
-			
-			if (cr.findById(usuario.getId()).get().getMinutosDisponiveis() != null) {
-				ClienteDto dto = this.getCliente(usuario.getId());
-				dtos.add(dto);
-			}
+		List<Cliente> clientes = cr.findAll();
+		ArrayList<ClienteDto> dtos = new ArrayList<>();	
+		for (Cliente cliente : clientes) {
+			ClienteDto clienteDto = new ClienteDto();
+			BeanUtils.copyProperties(cliente, clienteDto);
+			dtos.add(clienteDto);
 		}
 		return dtos;
 	}
 	
 	public ClienteDto getCliente(long id) {
-		Optional<Usuario> usuario = ur.findById(id);
-		Usuario newUsuario = usuario.get();
-		
 		Optional<Cliente> cliente = cr.findById(id);
-		Cliente newCliente = cliente.get();
-
-		ClienteDto dto = new ClienteDto(newUsuario, newCliente);
-		return dto;
+		ClienteDto clienteDto = new ClienteDto();
+		BeanUtils.copyProperties(cliente.get(), clienteDto);
+		return clienteDto;
 	}
 	
 	public ClienteDto saveCliente (ClienteDto dto) {
-		Cliente cliente = new Cliente(dto);
-		Cliente newCliente = cr.save(cliente);
-		dto.setId(newCliente.getId());
-		dto.setMinutosDisponiveis(newCliente.getMinutosDisponiveis());
+		Cliente cliente = new Cliente();
+    	BeanUtils.copyProperties(dto, cliente);
+    	cliente.calcularMinutosDisponiveis(cliente.getDataNascimento());
+    	cliente = cr.save(cliente);
+    	BeanUtils.copyProperties(cliente, dto);
 		return dto;
 	}
 	
@@ -60,11 +51,13 @@ public class ClienteService {
 	}
 
 	public ClienteDto updateCliente(long id, ClienteDto dto) {
-		Cliente cliente = new Cliente(dto);
-		cliente.setId(id);
+		Optional<Cliente> opt = cr.findById(id);
+		Cliente cliente = opt.get();
+		BeanUtils.copyProperties(dto, cliente);
+		cliente.calcularMinutosDisponiveis(cliente.getDataNascimento());
 		cr.save(cliente);
-		
-		return this.getCliente(id);
+		BeanUtils.copyProperties(cliente, dto);
+		return dto;
 	}
 
 }

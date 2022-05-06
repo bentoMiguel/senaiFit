@@ -7,25 +7,24 @@ import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import com.senai.senaiFit.dtos.ClienteDto;
-
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table(name = "clientes")
 @PrimaryKeyJoinColumn(name="id")
+@EqualsAndHashCode(callSuper=false)
 public class Cliente extends Usuario {
 
-	public Cliente (ClienteDto dto) {
-		super(dto);
-		this.calcularMinutosDisponiveis(dto.getDataNascimento());
-	}
-	
-	public Cliente () {}
+	private static final long serialVersionUID = 1L;
 	
 	private Integer minutosDisponiveis;
 	private Integer minutosUtilizados;
+	
+	public Cliente() {
+		super();
+	}
 	
 	public void calcularMinutosDisponiveis(LocalDate dataNascimento) {
 		int idade = Period.between(dataNascimento, LocalDate.now()).getYears();

@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.senai.senaiFit.dtos.InstrutorDto;
 import com.senai.senaiFit.dtos.ParceiroDto;
-import com.senai.senaiFit.services.InstrutorService;
 import com.senai.senaiFit.services.ParceiroService;
 
 @RestController

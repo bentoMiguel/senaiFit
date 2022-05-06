@@ -7,19 +7,20 @@ import javax.persistence.Table;
 import com.senai.senaiFit.dtos.InstrutorDto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table(name = "instutores")
 @PrimaryKeyJoinColumn(name="id")
+@EqualsAndHashCode(callSuper=false)
 public class Instrutor extends Usuario {
-	
-	public Instrutor (InstrutorDto dto) {
-		super(dto);
-		this.numeroRegistroProfissional = dto.getNumeroRegistroProfissional();
+
+	private static final long serialVersionUID = 1L;
+
+	public Instrutor () {
+		super();
 	}
-	
-	public Instrutor () {}
 	
 	private Long numeroRegistroProfissional;
 }
