@@ -13,5 +13,9 @@ import com.senai.senaiFit.models.Checkin;
 public interface CheckinRepository extends JpaRepository<Checkin, Long> {
 
 	@Query("SELECT c FROM Checkin c INNER JOIN c.cliente WHERE c.cliente.id = ?1 AND c.dataCheckin >= ?2 AND c.dataCheckin <= ?3")
-	List<Checkin> findChickinByCliente(long id, LocalDate inicio, LocalDate fim);
+	List<Checkin> findCheckinByCliente(long id, LocalDate inicio, LocalDate fim);
+	
+	@Query("SELECT c FROM Checkin c INNER JOIN c.parceiro WHERE c.parceiro.id = ?1 AND c.dataCheckin >= ?2 AND c.dataCheckin <= ?3")
+	List<Checkin> findCheckinByParceiro(long id, LocalDate inicio, LocalDate fim);
+	
 }

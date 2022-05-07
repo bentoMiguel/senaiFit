@@ -2,7 +2,6 @@ package com.senai.senaiFit.services;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import com.senai.senaiFit.models.Parceiro;
 import com.senai.senaiFit.repositories.CheckinRepository;
 import com.senai.senaiFit.repositories.ClienteRepository;
 import com.senai.senaiFit.repositories.ParceiroRepository;
+import static java.time.temporal.TemporalAdjusters.*;
 
 @Controller
 public class CheckinService {
@@ -52,9 +52,9 @@ public class CheckinService {
 		if (minutos > limiteDia) {
 			msg = "Cuidado! O excesso de atividade física também pode fazer mal para sua saúde";
 		} else {
-			LocalDate inicio = LocalDate.now().with(DayOfWeek.SUNDAY).minusDays(6);
+			LocalDate inicio = LocalDate.now().with(DayOfWeek.SUNDAY).minusDays(7);
 			LocalDate fim = LocalDate.now().with(DayOfWeek.SATURDAY);
-			List<Checkin> cks = cr.findChickinByCliente(clienteId, inicio, fim);
+			List<Checkin> cks = cr.findCheckinByCliente(clienteId, inicio, fim);
 			
 			int totalHoras = 0;
 			
@@ -71,6 +71,18 @@ public class CheckinService {
 			}
 		}
 		return msg;
+	}
+	
+	public List<Checkin> getParceiroCheckins(long id) {
+		LocalDate inicio = LocalDate.now().with(firstDayOfMonth());
+		LocalDate fim = LocalDate.now().with(lastDayOfMonth());
+		return cr.findCheckinByParceiro(id, inicio, fim);
+	}
+	
+	public List<Checkin> getClienteCheckinsMes(long id) {
+		LocalDate inicio = LocalDate.now().with(firstDayOfMonth());
+		LocalDate fim = LocalDate.now().with(lastDayOfMonth());
+		return cr.findCheckinByCliente(id, inicio, fim);
 	}
 	
 }
