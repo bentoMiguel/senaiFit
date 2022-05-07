@@ -40,7 +40,6 @@ public class ClienteService {
 	public ClienteDto saveCliente (ClienteDto dto) {
 		Cliente cliente = new Cliente();
     	BeanUtils.copyProperties(dto, cliente);
-    	cliente.calcularMinutosDisponiveis(cliente.getDataNascimento());
     	cliente = cr.save(cliente);
     	BeanUtils.copyProperties(cliente, dto);
 		return dto;
@@ -54,7 +53,7 @@ public class ClienteService {
 		Optional<Cliente> opt = cr.findById(id);
 		Cliente cliente = opt.get();
 		BeanUtils.copyProperties(dto, cliente);
-		cliente.calcularMinutosDisponiveis(cliente.getDataNascimento());
+		
 		cr.save(cliente);
 		BeanUtils.copyProperties(cliente, dto);
 		return dto;

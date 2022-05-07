@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -15,16 +16,16 @@ import lombok.Data;
 @Entity
 @Table(name = "checkins")
 public class Checkin {
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@Column(nullable = false)
-	private final Cliente cliente;
-	@Column(nullable = false)
-	private final LocalDate dataCheckin;
-	@Column(nullable = false)
-	private final int minutosAtividade;
+	@ManyToOne
+	private Parceiro parceiro;	
+	@ManyToOne
+	private Cliente cliente;
+	private LocalDate dataCheckin;
+	private int minutosAtividade;
 	
 }
